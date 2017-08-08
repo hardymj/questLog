@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>QuestLog</display-name>
+  <welcome-file-list>
+  <welcome-file>QuestLog</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>QuestLog</display-name>
+    <servlet-name>QuestLog</servlet-name>
+    <servlet-class>uk.co.tpplc.servlets.QuestLog</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QuestLog</servlet-name>
+    <url-pattern>/QuestLog</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+   <description></description>
+    <display-name>GetQuests</display-name>
+    <servlet-name>GetQuests</servlet-name>
+    <servlet-class>uk.co.tpplc.servlets.GetQuests</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetQuests</servlet-name>
+    <url-pattern>/getQuests</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <description></description>
+    <display-name>UserVoted</display-name>
+    <servlet-name>UserVoted</servlet-name>
+    <servlet-class>uk.co.tpplc.servlets.UserVoted</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserVoted</servlet-name>
+    <url-pattern>/UserVoted</url-pattern>
+  </servlet-mapping>
+</web-app>
