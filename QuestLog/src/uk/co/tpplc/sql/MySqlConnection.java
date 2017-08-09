@@ -149,7 +149,7 @@ public class MySqlConnection {
 			proc_select.close();
 			
 			if(id == -1){
-				systems = "insert into questVote (questId,userId,voted) values("+voted.getQuestId()+","+userId+","+userId+")";
+				systems = "insert into questVote (questId,userId,voted) values("+voted.getQuestId()+","+userId+","+voted.getVoted()+")";
 			}
 			else{
 				systems = "update questVote set voted = "+voted.getVoted() + " where id = "+id;

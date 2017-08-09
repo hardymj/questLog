@@ -34,9 +34,9 @@ public class QuestLog extends HttpServlet {
 			}
 		}
 		
-		ArrayList<Quest> quests = mySql.retrieveQuests("");
-		request.setAttribute("quests",quests);
-		RequestDispatcher requestDispatcher = request.getRequestDispatcher("questLog.jsp");
+		/*ArrayList<Quest> quests = mySql.retrieveQuests("");
+		request.setAttribute("quests",quests);*/
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("questLog2.html");
 		requestDispatcher.forward(request, response);
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

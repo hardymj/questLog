@@ -14,7 +14,7 @@
 	<div class="content">
 		<div class="content-headers">
 			<div class="g-signin2" data-onsuccess="onSignIn"></div>
-			<a href="#" onclick="signOut();">Sign out</a>
+			<a href="#" id="signOut" onclick="signOut();">Sign out</a>
 			<a href="#" id="nqBut">New Quest</a>
 		</div>
 		<div class="dashboard-wrapper dash-top">
@@ -23,7 +23,7 @@
 				<form id="quest" action="QuestLog" method="post">		
 					<div><label for="title">Title</label><input name="title" type="text"></input></div>
 					<div><label for="description">Description</label><input name="description" type="text"></input></div>
-					<div><label for="user">User</label><input name="user" type="text"></input></div>
+					<div><label for="user">User</label><input id="newQuestUser" name="user" type="text" readonly></input></div>
 					<div><label for="value">Value</label><input name="value" type="text"></input></div>
 					<input type="submit" name="action" value="Submit"/>
 					<input class="cancel" type="button" value="Cancel"/>
@@ -62,23 +62,23 @@
 
 signedInCheck = null;
 
-$(function () {
-	
+$(function () {	
 	$("#nqBut").on("click",function(){
-		$("#newQuest").show();
+		$("#selectedQuest").hide();
+		$("#newQuest").show();		
+		var auth2 = gapi.auth2.getAuthInstance();
+		if (auth2.isSignedIn.get()) {
+			var profile = auth2.currentUser.get().getBasicProfile();
+			user = profile.getId();
+			email = profile.getEmail();
+			$("#newQuestUser").val(email);
+		}
+		
 	});
 	$(".cancel").on("click",function(){
 		$("#newQuest").hide();
 		$("#selectedQuest").hide();
 	});
-	
-	/*$(".cancel").each(function(){
-		console.log("HI");
-		$(this).on("click",function(){
-			$("#newQuest").hide();
-			$("#newQuest").hide();
-		});
-	});*/		
 	
 	function selectAllQuests(user){
 		jQuery.ajax({
@@ -115,10 +115,22 @@ $(function () {
 		$table.find("tr:gt(0)").remove();		
 		$.each($arrayFile, function(i, $row) {
 			populateRow($table,$row);
-		});		
-		$('.topic').each(function(){
-			$(this).upvote();
 		});
+		
+		var auth2 = gapi.auth2.getAuthInstance();
+		if (auth2.isSignedIn.get()) {
+			$('.topic').each(function(){
+				$(this).upvote();
+			});
+			$('td').not(":nth-child(6)").on("click", function () {
+				$("#selectedQuest").show();
+				$("#newQuest").hide();		
+				$(selectedTitle).text($(this).find(".title").text());
+				$(selectedDescription).text($(this).find(".description").text());
+				$(selectedUser).text($(this).find(".user").text());
+				$(selectedValue).text($(this).find(".value").text());
+			});
+		}
 		
 		$('.upvote-enabled').on("click", function () {			
 			var user=1;
@@ -147,25 +159,12 @@ $(function () {
 				dataType:"html",
 				data:"quest="+questId+"&user="+user+"&voted="+voted+"&email="+email,
 				success:function(response){
+					signedInCheck(user);	
 				},
 				error:function(xhr,err){
 				}
 			});
-			//selectAllQuests()
 		});
-		
-		$('table tr').on("click", function () {
-			
-			
-			
-			$("#selectedQuest").show();
-			$("#newQuest").hide();		
-			$(selectedTitle).text($(this).find(".title").text());
-			$(selectedDescription).text($(this).find(".description").text());
-			$(selectedUser).text($(this).find(".user").text());
-			$(selectedValue).text($(this).find(".value").text());
-		});
-		
 	}
 	function populateRow($table,$row){		
 		$rowId 			= "<td class='id'>"+$row.id+"</td>";
@@ -187,12 +186,16 @@ $(function () {
 function onLoad(){
 	var auth2 = gapi.auth2.getAuthInstance();
 	if (!auth2.isSignedIn.get()) {
-		signedInCheck("");
+		signedInCheck("");		
+		$("#signOut").hide();
+		$("#nqBut").hide();
 	}
 	
 }	
 function onSignIn(googleUser) {
 	var profile = googleUser.getBasicProfile();
+	$("#signOut").show();
+	$("#nqBut").show();
 	signedInCheck(profile.getId());
 }	
 function signOut() {
@@ -202,6 +205,10 @@ function signOut() {
     	$(".topic").unbind("upvote");
     	$(".upvote").removeClass("upvote-on");
     	$(".downvote").removeClass("downvote-on");
+    	$("#signOut").hide();
+		$("#nqBut").hide();
+		$("#newQuest").hide();
+		$("#selectedQuest").hide();
     });
   }
 </script>
